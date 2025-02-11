@@ -9,6 +9,7 @@ import { useRandomCats } from "@/hooks/use-cats";
 import { useState, useEffect } from "react";
 import Loader from "@/components/loader";
 import { addSearchParams, deleteSearchParams } from "@/lib/utils";
+import Error from "@/components/error";
 
 export default function HomePage() {
   const router = useRouter();
@@ -16,8 +17,14 @@ export default function HomePage() {
   const catId = searchParams.get("cat");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useRandomCats();
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+  } = useRandomCats();
 
   useEffect(() => {
     if (catId) {
@@ -37,6 +44,7 @@ export default function HomePage() {
   };
 
   if (isLoading) return <Loader />;
+  if (isError) return <Error />;
 
   const cats = (data?.pages.flat() as CatImage[]) ?? [];
 

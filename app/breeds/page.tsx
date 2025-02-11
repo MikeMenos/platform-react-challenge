@@ -10,6 +10,7 @@ import { useBreeds, useBreedCats } from "@/hooks/use-cats";
 import Loader from "@/components/loader";
 import { useRouter, useSearchParams } from "next/navigation";
 import { addSearchParams, deleteSearchParams } from "@/lib/utils";
+import Error from "@/components/error";
 
 export default function BreedsPage() {
   const router = useRouter();
@@ -20,7 +21,11 @@ export default function BreedsPage() {
   const [selectedCatId, setSelectedCatId] = useState<string | null>(null);
   const [isCatModalOpen, setIsCatModalOpen] = useState(false);
   const [isBreedModalOpen, setIsBreedModalOpen] = useState(false);
-  const { data: breeds, isLoading: breedsLoading } = useBreeds();
+  const {
+    data: breeds,
+    isLoading: breedsLoading,
+    isError: breedsError,
+  } = useBreeds();
   const { data: breedCats, isLoading: catsLoading } = useBreedCats(breedId);
 
   useEffect(() => {
@@ -57,6 +62,7 @@ export default function BreedsPage() {
   };
 
   if (breedsLoading) return <Loader />;
+  if (breedsError) return <Error />;
 
   return (
     <div className="container mx-auto py-8">

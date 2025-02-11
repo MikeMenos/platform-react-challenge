@@ -22,7 +22,7 @@ interface CatModalProps {
 export function CatModal({ catId, isOpen, onClose }: CatModalProps) {
   const { addFavorite, removeFavorite } = useFavoriteMutations();
   const { data: favorites, isFetching } = useFavorites();
-  const { data: cat, isLoading } = useSingleCat(catId);
+  const { data: cat, isLoading, isError } = useSingleCat(catId);
   const isAlreadyInFavorites = favorites?.find(
     (favorite) => favorite.image_id === catId
   );
@@ -34,7 +34,7 @@ export function CatModal({ catId, isOpen, onClose }: CatModalProps) {
   };
 
   if (isLoading) return <Loader />;
-  if (!cat) return <Error />;
+  if (isError || !cat) return <Error />;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -48,7 +48,7 @@ export function CatModal({ catId, isOpen, onClose }: CatModalProps) {
           />
         </div>
 
-        {cat.breeds?.[0] && (
+        {cat.breeds?.[0]! && (
           <div className="mt-4">
             <Link href={`/breeds/?breed=${cat.breeds[0].id}`}>
               <h2 className="text-2xl font-bold hover:cursor-pointer">

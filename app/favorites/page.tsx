@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useFavorites, useFavoriteMutations } from "@/hooks/use-cats";
 import Loader from "@/components/loader";
+import Error from "@/components/error";
 
 export default function FavoritesPage() {
-  const { data: favorites, isLoading } = useFavorites();
+  const { data: favorites, isLoading, isError } = useFavorites();
   const { removeFavorite } = useFavoriteMutations();
 
   if (isLoading) return <Loader />;
+  if (isError) return <Error />;
 
   return (
     <div className="container mx-auto py-8">
